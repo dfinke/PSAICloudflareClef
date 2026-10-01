@@ -24,7 +24,7 @@ Describe 'Invoke-CloudflareClefDecision' {
     # Provide a representative parsed API response for all tests unless a case replaces it.
     BeforeEach {
         Mock Invoke-RestMethod -ModuleName PSAICloudflareClef {
-            [pscustomobject]@{ success = $true; result = [pscustomobject]@{ model = 'clef' }; answers = [pscustomobject]@{ urgent = [pscustomobject]@{ noul = 0.93 }; owner = [pscustomobject]@{ choice = 'support' }; severity = [pscustomobject]@{ score = 1.7 } } }
+            [pscustomobject]@{ success = $true; result = [pscustomobject]@{ model = 'clef'; answers = [pscustomobject]@{ urgent = [pscustomobject]@{ noul = 0.93 }; owner = [pscustomobject]@{ choice = 'support' }; severity = [pscustomobject]@{ score = 1.7 } } } }
         }
     }
 

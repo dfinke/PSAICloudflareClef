@@ -153,7 +153,12 @@ function Invoke-CloudflareClefDecision {
 
     # Submit one JSON POST and translate HTTP or transport failures into useful safe errors.
     try {
-        return Invoke-RestMethod -Uri $uri -Method Post -Headers $headers -ContentType 'application/json' -Body $requestBody -TimeoutSec $TimeoutSec -ErrorAction Stop
+        # Capture the standard Cloudflare REST envelope so callers receive model output directly.
+        $response = Invoke-RestMethod -Uri $uri -Method Post -Headers $headers -ContentType 'application/json' -Body $requestBody -TimeoutSec $TimeoutSec -ErrorAction Stop
+        if ($null -ne $response -and $null -ne $response.result) {
+            return $response.result
+        }
+        return $response
     }
     catch {
         # Do not surface request data or authorization headers in error messages.
