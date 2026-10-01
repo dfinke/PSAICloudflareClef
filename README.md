@@ -58,6 +58,36 @@ $result.answers.severity.score
 
 `New-CloudflareClefQuestion` creates a typed PowerShell object. Alternatively, pass an API-shaped named map to `-Questions`. The `-AccountId` and `-Token` parameters override `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`. The HTTP timeout defaults to 30 seconds; `-TimeoutSec` accepts 1 through 600.
 
+## Models and images
+
+Clef is the default model. Pass `-Model ClefFlash` to use `@cf/cloudflare/clef-flash`.
+
+For image input, the module accepts embedded PNG, JPEG, or WebP data URIs or raw base64 values. Cloudflare does not accept remote image URLs for Clef. This example reads the included illustration and constructs a valid data URI:
+
+```powershell
+$imageBytes = [System.IO.File]::ReadAllBytes('.\assets\cloudflare-clef.png')
+$imageDataUri = 'data:image/png;base64,' + [Convert]::ToBase64String($imageBytes)
+
+$result = Invoke-CloudflareClefDecision -State 'Review this module illustration.' `
+    -Questions @{ decisionFlow = @{ type = 'noul'; instructions = 'Does the image show information flowing into a central decision point and branching into outcomes?' } } `
+    -Image $imageDataUri
+$result.answers.decisionFlow.noul
+```
+
+Cloudflare allows up to four images, each at most 4 MiB and 16 megapixels, with 8 MiB decoded across all images and a 13 MiB whole request body. The module validates image count, format, byte sizes, and serialized request size; Cloudflare enforces the megapixel limit. Video can also be included in `State`; long state input may be truncated to fit the model context window.
+
+## Request and question limits
+
+The request posts `model`, `state`, and named `questions` to the account-scoped Workers AI endpoint. The Flash model uses `model: "clef-flash"` and its corresponding model path.
+
+- Questions: 1–64 per request.
+- Question IDs: 1–100 characters, using letters, digits, `_`, `.`, or `-`.
+- Types: `noul` (yes/no probability), `choice` (named options), and `score` (ordered rubric).
+- Choice criteria: 1–255 named options; score criteria: 2–10 ordered rubric levels.
+- Context window: 65,536 tokens.
+
+The command validates the request before sending it. HTTP and transport failures are terminating errors and include status and response details when available, without exposing authorization headers or request content.
+
 ## Examples
 
 The `Examples` folder adapts the decision workflows from [dfinke/Jev](https://github.com/dfinke/Jev/tree/main/Examples) to this standalone Cloudflare module. Each script imports `PSAICloudflareClef.psd1` with `-Force`. Scripts that invoke Clef make live requests and can incur Workers AI usage; set `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` first.
