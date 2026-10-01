@@ -99,7 +99,6 @@ The `Examples` folder adapts the decision workflows from [dfinke/Jev](https://gi
 - `ReleaseNotes.ps1` and `StandupReport.ps1` summarize local Git history; the latter also shows the working tree, plan, and blockers.
 - `Excel-IT-Queue.ps1` and `DealDesk.ps1` require the `ImportExcel` module. Sample workbooks are in `data/`.
 
-`InstallModule.ps1` installs the module locally. `PublishToGallery.ps1` validates the manifest and publishes only when run with a Gallery key; it supports `-WhatIf` and confirmation.
 ## Official documentation
 
 - [Clef model and request schema](https://developers.cloudflare.com/workers-ai/models/clef/)
