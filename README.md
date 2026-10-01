@@ -10,10 +10,11 @@ The module is independent. It does not import or modify PSAIPerplexityDecisions,
 
 ## Install and configure
 
-Clone this repository, then import its manifest:
+Install the published module from PowerShell Gallery:
 
 ```powershell
-Import-Module .\PSAICloudflareClef.psd1 -Force
+Install-Module PSAICloudflareClef -Scope CurrentUser
+Import-Module PSAICloudflareClef -Force
 ```
 
 Set the account ID and API token in your environment, or pass them explicitly to the command:
@@ -28,7 +29,7 @@ Create a Cloudflare API token using the Workers AI template. If creating a custo
 ## Quick start
 
 ```powershell
-Import-Module .\PSAICloudflareClef.psd1 -Force
+Import-Module PSAICloudflareClef -Force
 
 $state = @{
     incident = 'Checkout has returned HTTP 503 errors for every customer for the last hour.'
