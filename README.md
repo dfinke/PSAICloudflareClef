@@ -58,44 +58,6 @@ $result.answers.severity.score
 
 `New-CloudflareClefQuestion` creates a typed PowerShell object. Alternatively, pass an API-shaped named map to `-Questions`. The `-AccountId` and `-Token` parameters override `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`. The HTTP timeout defaults to 30 seconds; `-TimeoutSec` accepts 1 through 600.
 
-## Local installation and Gallery publication
-
-Install the module into the first suitable directory in `PSModulePath`, or pass an explicit destination:
-
-```powershell
-.\InstallModule.ps1
-.\InstallModule.ps1 -FullPath "$HOME\Documents\PowerShell\Modules\PSAICloudflareClef"
-Import-Module PSAICloudflareClef -Force
-```
-
-To publish manually, set `NuGetApiKey` in the environment and run `PublishToGallery.ps1`. Use `-WhatIf` to validate the manifest and review the intended action without publishing. The script validates that the manifest names this module and asks for confirmation before publication.
-
-## Models and images
-
-Clef is the default. `-Model ClefFlash` selects `@cf/cloudflare/clef-flash`; the official model page documents both models with the same request fields and limits. Clef-flash is the faster 9B model, while Clef is the 27B model.
-
-For vision requests, pass one to four embedded PNG, JPEG, or WebP data URIs or raw base64 image values through `-Image`. Remote URLs are rejected. Cloudflare documents a maximum of 4 MiB and 16 megapixels per image, 8 MiB decoded across all images, and a 13 MiB whole request body. The module validates embedded format signatures for raw base64, image count, 4 MiB per image, 8 MiB aggregate, and 13 MiB serialized body. Cloudflare enforces the 16 megapixel limit. The model can also read video represented in `State`; the input may be truncated to fit the model context window.
-
-```powershell
-# Example only: $imageDataUri should contain an embedded image data URI.
-$result = Invoke-CloudflareClefDecision -State 'Is the screenshot showing a payment error?' `
-    -Questions @{ paymentError = @{ type = 'noul'; instructions = 'Does the screenshot show a payment error?' } } `
-    -Image $imageDataUri
-```
-
-## Request and question limits
-
-The request is `POST https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/ai/run/@cf/cloudflare/clef` with JSON `model: "clef"`, `state`, and named `questions`. The Flash model uses `model: "clef-flash"` and its corresponding model path.
-
-- Questions: 1–64 per request.
-- Question IDs: 1–100 characters, using letters, digits, `_`, `.`, or `-`.
-- Types: `noul` (yes/no probability), `choice` (named options), `score` (ordered rubric).
-- Choice: 1–255 named criteria options; score: 2–10 ordered rubric levels (compatible with the Jev helper patterns).
-- Images: up to four embedded PNG/JPEG/WebP images; no remote URLs.
-- Context window: 65,536 tokens; long text state is truncated by the service.
-
-The command validates request structure before HTTP. Cloudflare HTTP and transport failures are terminating errors. HTTP errors include status and response details when available without including authorization headers or request content.
-
 ## Examples
 
 The `Examples` folder adapts the decision workflows from [dfinke/Jev](https://github.com/dfinke/Jev/tree/main/Examples) to this standalone Cloudflare module. Each script imports `PSAICloudflareClef.psd1` with `-Force`. Scripts that invoke Clef make live requests and can incur Workers AI usage; set `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` first.
