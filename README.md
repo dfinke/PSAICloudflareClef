@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/cloudflare-clef.png" alt="Cloudflare Clef typed decision illustration" width="180">
+</p>
+
 # PSAICloudflareClef
 
 A standalone PowerShell module for structured decisions with Cloudflare Workers AI Clef. It sends a state and named `noul`, `choice`, and `score` questions to the official account-scoped REST endpoint and returns Cloudflare's parsed response.
