@@ -54,6 +54,18 @@ $result.answers.severity.score
 
 `New-CloudflareClefQuestion` creates a typed PowerShell object. Alternatively, pass an API-shaped named map to `-Questions`. The `-AccountId` and `-Token` parameters override `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN`. The HTTP timeout defaults to 30 seconds; `-TimeoutSec` accepts 1 through 600.
 
+## Local installation and Gallery publication
+
+Install the module into the first suitable directory in `PSModulePath`, or pass an explicit destination:
+
+```powershell
+.\InstallModule.ps1
+.\InstallModule.ps1 -FullPath "$HOME\Documents\PowerShell\Modules\PSAICloudflareClef"
+Import-Module PSAICloudflareClef -Force
+```
+
+To publish manually, set `NuGetApiKey` in the environment and run `PublishToGallery.ps1`. Use `-WhatIf` to validate the manifest and review the intended action without publishing. The script validates that the manifest names this module and asks for confirmation before publication.
+
 ## Models and images
 
 Clef is the default. `-Model ClefFlash` selects `@cf/cloudflare/clef-flash`; the official model page documents both models with the same request fields and limits. Clef-flash is the faster 9B model, while Clef is the 27B model.
@@ -90,6 +102,18 @@ Invoke-Pester .\Tests
 
 All HTTP calls in tests are mocked. No test makes a live Cloudflare request.
 
+## Examples
+
+The `Examples` folder adapts the decision workflows from [dfinke/Jev](https://github.com/dfinke/Jev/tree/main/Examples) to this standalone Cloudflare module. Each script imports `PSAICloudflareClef.psd1` with `-Force`. Scripts that invoke Clef make live requests and can incur Workers AI usage; set `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` first.
+
+- `QuickStart.ps1` asks `noul`, `choice`, and `score` questions in one request.
+- `RefundTriage.ps1`, `SecurityIncidentTriage.ps1`, and `PageOnCall.ps1` demonstrate support and incident workflows.
+- `SemanticLogTriage.ps1` classifies log lines; `NotesToActions.ps1` categorizes notes.
+- `PowerShellCommandFinder.ps1` searches local command metadata and suggests a command without running it.
+- `ReleaseNotes.ps1` and `StandupReport.ps1` summarize local Git history; the latter also shows the working tree, plan, and blockers.
+- `Excel-IT-Queue.ps1` and `DealDesk.ps1` require the `ImportExcel` module. Sample workbooks are in `data/`.
+
+`InstallModule.ps1` installs the module locally. `PublishToGallery.ps1` validates the manifest and publishes only when run with a Gallery key; it supports `-WhatIf` and confirmation.
 ## Official documentation
 
 - [Clef model and request schema](https://developers.cloudflare.com/workers-ai/models/clef/)
