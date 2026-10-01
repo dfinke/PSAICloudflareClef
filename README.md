@@ -96,16 +96,6 @@ The request is `POST https://api.cloudflare.com/client/v4/accounts/{ACCOUNT_ID}/
 
 The command validates request structure before HTTP. Cloudflare HTTP and transport failures are terminating errors. HTTP errors include status and response details when available without including authorization headers or request content.
 
-## Development
-
-Run offline Pester tests from the repository root:
-
-```powershell
-Invoke-Pester .\Tests
-```
-
-All HTTP calls in tests are mocked. No test makes a live Cloudflare request.
-
 ## Examples
 
 The `Examples` folder adapts the decision workflows from [dfinke/Jev](https://github.com/dfinke/Jev/tree/main/Examples) to this standalone Cloudflare module. Each script imports `PSAICloudflareClef.psd1` with `-Force`. Scripts that invoke Clef make live requests and can incur Workers AI usage; set `CLOUDFLARE_ACCOUNT_ID` and `CLOUDFLARE_API_TOKEN` first.
