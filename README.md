@@ -24,6 +24,8 @@ Create a Cloudflare API token using the Workers AI template. If creating a custo
 ## Quick start
 
 ```powershell
+Import-Module .\PSAICloudflareClef.psd1
+
 $state = @{
     incident = 'Checkout has returned HTTP 503 errors for every customer for the last hour.'
     affectedCustomers = 1200
