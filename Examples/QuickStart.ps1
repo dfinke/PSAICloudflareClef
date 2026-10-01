@@ -1,3 +1,6 @@
+# Import the module manifest from this repository folder.
+Import-Module (Join-Path (Split-Path $PSScriptRoot -Parent) 'PSAICloudflareClef.psd1')
+
 # Show an offline-safe example request definition; invoking it requires Cloudflare credentials and makes a live request.
 $state = @{ ticket = 'The latest invoice is incorrect and the customer may cancel.' }
 $questions = @(
