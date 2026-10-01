@@ -1,0 +1,9 @@
+# Ignore local PowerShell, editor, test, and secret files.
+*.user
+*.suo
+.vscode/
+.idea/
+TestResults/
+*.coverage.xml
+.env
+.env.*
